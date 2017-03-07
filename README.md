@@ -208,63 +208,63 @@ Sample Configuration
 
 ```yaml
 ---
-request:
-  url: https://cloud.zeyos.com/pepe/remotecall/barcodeapi
-  username: ''
-  password: ''
-log:
-  error: log/error.log
-  default: log/default.log
-rules:
-- name: Test Request
-  input: "^X[0-9]+"
-  action:
-    type: request
-    route: "/"
-    then:
-      type: beep
-      count: 5
-      delay: 10
+  ---
+  request:
+    url: https://cloud.zeyos.com/pepe/remotecall/barcodeapi
+    username: ''
+    password: ''
+  log:
+    error: log/error.log
+    default: log/default.log
+  rules:
+  - name: Test Request
+    input: "^X[0-9]+"
+    action:
+      type: request
+      route: "/"
+      then:
+        type: beep
+        count: 5
+        delay: 10
+        then:
+          type: output
+          data: Value stored %testvar%
+  - name: Store the barcode
+    input: "^A[0-9]+"
+    action:
+      type: store
+      var: testvar
+      then:
+        type: beep
+        count: 5
+        delay: 10
+        then:
+          type: output
+          data: Value stored %testvar%
+  - name: Scan new barcode for request
+    input: "^R[0-9]+"
+    action:
+      type: writefile
+      filename: test.txt
+      mode: append
+      data: Hallo %testvar%
+      then:
+        type: output
+        data: File written
+  - name: Check the wildcard
+    input: ".*"
+    action:
+      type: store
+      var: testvar
       then:
         type: output
         data: Value stored %testvar%
-- name: Store the barcode
-  input: "^A[0-9]+"
-  action:
-    type: store
-    var: testvar
-    then:
-      type: beep
-      count: 5
-      delay: 10
-      then:
-        type: output
-        data: Value stored %testvar%
-- name: Scan new barcode for request
-  input: "^R[0-9]+"
-  action:
-    type: writefile
-    filename: test.txt
-    mode: append
-    data: Hallo %testvar%
-    then:
-      type: output
-      data: File written
-- name: Check the wildcard
-  input: ".*"
-  action:
-    type: store
-    var: testvar
-    then:
-      type: output
-      data: Value stored %testvar%
-      then:
-          type: request
-          method: GET
-          var: resp
-          route: /%testvar%
-          then:
-            type: output
-            data: Server response %resp%
-
+        then:
+            type: request
+            method: GET
+            var: resp
+            route: /%testvar%
+            then:
+              type: output
+              data: Server response %resp%
 ```
