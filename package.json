@@ -17,7 +17,6 @@
     "nopt"        : "~2.1.2",
     "cli-table"   : "~0.3.0",
     "js-yaml"     : "~3.0",
-    "api-cli"     : "~0.2",
     "beepbeep"    : "~1.2.0"
   },
   "engines": {
