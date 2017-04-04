@@ -200,6 +200,7 @@ Parameters:
 * `url`: The request URL
 * `route`: If you have configured a global base URL in the Codematic options, you can also define a single route instead of a full URL
 * `method`: GET, POST, PUT, DELETE (default is GET)
+* `data`: The form data object. Placeholders will be included for string values
 * `var`: The variable name for the response value (default is `RESPONSE`)
 
 
