@@ -150,6 +150,8 @@ Writes a string to the console using the `log` method.
 Parameters:
 
 * `data`: Output data
+* `style`: Output style (e.g. "danger", "success", "info")
+
 
 ### writefile
 
@@ -160,6 +162,7 @@ Parameters:
 * `filename`: The filename
 * `mode`: "append" or "write" (default is "write")
 * `data`: The file data
+* `var_source`: Instead of using data, you can also specify a source variable
 
 
 ### readfile
@@ -178,6 +181,18 @@ Clears a single slot or - if no variable is defined - all variable slots
 
 Parameters:
 
+* `var`: Variable name
+
+
+### replace
+
+Replace a string value
+
+Parameters:
+
+* `subject`
+* `pattern`: Regular expression
+* `replacement`: Replacement value (default: "")
 * `var`: Variable name
 
 
@@ -202,6 +217,9 @@ Parameters:
 * `method`: GET, POST, PUT, DELETE (default is GET)
 * `data`: The form data object. Placeholders will be included for string values
 * `var`: The variable name for the response value (default is `RESPONSE`)
+* `filename`: Optional sends response to a filename (e.g. for PDF documents)
+
+There's also a special behavior for command chaining, since you can also use the response code to issue follow up commands (see sample config)
 
 
 Sample Configuration
@@ -223,13 +241,17 @@ Sample Configuration
     action:
       type: request
       route: "/"
-      then:
+      200:
         type: beep
         count: 5
         delay: 10
         then:
           type: output
           data: Value stored %testvar%
+      500:
+        type: output
+        style: danger
+        data: Request failed %BODY%
   - name: Store the barcode
     input: "^A[0-9]+"
     action:
