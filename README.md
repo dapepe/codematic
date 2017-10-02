@@ -36,14 +36,14 @@ var options = {
           type: 'request',
           route: '/%CODE%',
           method: 'GET',
-          then: {
+          200: {
             type: 'output',
             data: 'Success! Server response: %RESPONSE%'
             then: {
               type: 'myaction'
             }
           },
-          error: {
+          500: {
             type: 'output',
             data: 'Ooops! Something went wrong here!'
           }
