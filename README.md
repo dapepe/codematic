@@ -25,7 +25,7 @@ Usage
 
 ```javascript
 var options = {
-  rules: [
+  onInput: [
     {
       name: 'Test',
       input: '^X[0-9]+',
@@ -120,6 +120,52 @@ In order to make it easy to work with REST services, you can easily define a bas
 as well as a standard username and password.
 
 
+Events
+------
+
+### onInput
+
+Actions are executed on String input (e.g. when a barcode is scanned)
+
+Parameters:
+
+* `input`: `RegExp` Regular expression to match against the input string
+
+
+### onFilechange
+
+Watch files for changes
+
+Parameters:
+
+* `persistent`: `Boolean` Indicates whether the process should continue to run as long as files are being watched. (default = `true`)
+* `recursive`: `Boolean` Indicates whether all subdirectories should be watched, or only the current directory. (default = `false`)
+* `encoding`: `String` File encoding (default = `utf8`)
+* `filter`: `RegExp` Return that matches the filter expression.
+* `delay`: `Number`, in ms Delay time of the callback function. (default = `100`)
+* `event`: `String` Event type (`update`, `remove`, default = `both`)
+
+
+### onSchudule
+
+Run actions in a specific interval
+
+Parameters:
+
+* `schedule`: `String` Cron-like schedule syntax, see https://www.npmjs.com/package/node-schedule
+
+```
+*    *    *    *    *    *
+┬    ┬    ┬    ┬    ┬    ┬
+│    │    │    │    │    │
+│    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
+│    │    │    │    └───── month (0 - 11)
+│    │    │    └────────── day of month (1 - 31)
+│    │    └─────────────── hour (0 - 23)
+│    └──────────────────── minute (0 - 59)
+└───────────────────────── second (0 - 59, OPTIONAL)
+```
+
 Default Actions
 ---------------
 
@@ -173,6 +219,7 @@ Parameters:
 
 * `filename`: The filename
 * `var`: Variable name (default is `FILE`)
+* `encoding`: File encoding (default is `utf8`)
 
 
 ### clear
@@ -216,7 +263,7 @@ Parameters:
 * `route`: If you have configured a global base URL in the Codematic options, you can also define a single route instead of a full URL
 * `method`: GET, POST, PUT, DELETE (default is GET)
 * `data`: The form data object. Placeholders will be included for string values
-* `var`: The variable name for the response value (default is `RESPONSE`)
+* `var`: The variable name for the response value (default is `BODY`)
 * `filename`: Optional sends response to a filename (e.g. for PDF documents)
 
 There's also a special behavior for command chaining, since you can also use the response code to issue follow up commands (see sample config)
@@ -235,7 +282,7 @@ Sample Configuration
   log:
     error: log/error.log
     default: log/default.log
-  rules:
+  onInput:
   - name: Test Request
     input: "^X[0-9]+"
     action:

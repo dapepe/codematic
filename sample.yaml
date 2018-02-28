@@ -1,0 +1,87 @@
+request:
+  url: https://myrestapi.info/
+log:
+  error: /var/log/codematic.log
+  default: /var/log/codematic.log
+params:
+  ENDPOINT: test
+onStartup:
+- name: Load the current endpoint from config
+  action:
+    type: readfile
+    filename: ./endpoint.txt
+    var: ENDPOINT
+    then:
+      type: beep
+      count: 1
+onShutdown:
+- name: Bye bye
+  action:
+    type: output
+    data: Bye bye
+onFilechange:
+- name: Loadconfig
+  filename: ./endpoint.txt
+  persistent: true
+  recursive: false
+  filter: ".txt$"
+  delay: 1000
+  event: update
+  action:
+    type: readfile
+    filename: ./endpoint.txt
+    var: ENDPOINT
+    then:
+      type: output
+      data: "Endpoint updated: %ENDPOINT%"
+      then:
+        type: beep
+        count: 1
+onSchedule:
+- name: Test
+  schedule: "*/2 * * * *"
+  action:
+    type: output
+    data: "Cron is running on %DATE%"
+onInput:
+- name: Get current endpoint
+  input: "^ENDPOINT$"
+  action:
+    type: output
+    data: "Current endpoint: %ENDPOINT%"
+- name: Get current endpoint
+  input: "^EP:"
+  action:
+    type: replace
+    subject: "%CODE%"
+    pattern: "^EP:"
+    var: ENDPOINT
+    then:
+      type: writefile
+      filename: ./endpoint.txt
+      data: "%ENDPOINT%"
+      then:
+        type: output
+        data: Endpoint configured %ENDPOINT%
+        then:
+          type: beep
+          count: 3
+- name: Update status
+  input: ".*"
+  action:
+    type: store
+    var: transactionnum
+    then:
+      type: output
+      data: Updating transactionnum %transactionnum%
+      then:
+        type: request
+        method: GET
+        var: resp
+        route: /%transactionnum%/cam
+        then:
+          type: output
+          data: "Result: %resp%"
+          then:
+            type: beep
+            count: 2
