@@ -265,6 +265,7 @@ Parameters:
 * `data`: The form data object. Placeholders will be included for string values
 * `var`: The variable name for the response value (default is `BODY`)
 * `filename`: Optional sends response to a filename (e.g. for PDF documents)
+* `decode_json`: Decodes the request body
 
 There's also a special behavior for command chaining, since you can also use the response code to issue follow up commands (see sample config)
 
